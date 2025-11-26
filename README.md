@@ -5,13 +5,10 @@ This project utilizes SQL to analyze and uncover meaningful customer behavior pa
 
 This project performs RFM (Recency, Frequency, Monetary) Segmentation using SQL to classify customers based on their purchasing behavior. It helps identify key segments such as Champions, Loyal Customers, At-Risk Customers, and Lost Customers — improving data-driven marketing decisions.
 
-
-```sql
-#Dap tabase Setu
+##Dap tabase Setup
 ```sql
 CREATE DATABASE RFM;
 USE RFM;
-
 SELECT min(str_to_date(ORDERDATE,'%d/%m/%y')) AS MIN_ORDER_DATE,
        max(str_to_date(ORDERDATE,'%d/%m/%y')) AS MAX_ORDER_DATE
 FROM SAMPLE_RFM;
