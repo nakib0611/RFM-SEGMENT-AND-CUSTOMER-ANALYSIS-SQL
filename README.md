@@ -7,7 +7,7 @@ This project performs RFM (Recency, Frequency, Monetary) Segmentation using SQL 
 
 
 ```sql
-Database Setup
+#Dap tabase Setu
 CREATE DATABASE RFM;
 USE RFM;
 
