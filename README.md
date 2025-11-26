@@ -7,6 +7,7 @@ This project performs RFM (Recency, Frequency, Monetary) Segmentation using SQL 
 
 
 ```sql
+Database Setup
 CREATE DATABASE RFM;
 USE RFM;
 
