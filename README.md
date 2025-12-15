@@ -465,4 +465,8 @@ WHERE MONETARY_VALUE > (
 ORDER BY SALES DESC;
 ```
 -- OUTPUT -- 
-| CUSTOMERNAME | SALES | | :--- | :--- | | Euro Shopping Channel | 912,294 | | Mini Gifts Distributors Ltd. | 654,851 |
+PRODUCTLINE,TOTAL_SALES
+Classic Cars,"3,919,616"
+Vintage Cars,"1,797,559"
+Motorcycles,"1,121,426"
+Trucks and Buses,"1,024,113"
