@@ -86,6 +86,7 @@ GROUP BY RFM_SEGMENTS;
 ```
 
 -- OUTPUT -- 
+##--Output--
 
 | RFM_SEGMENTS | NUMBER_OF_CUSTOMERS | AVG_INACTIVITY | AVG_FREQUENCY | AVG_SPEND | | :--- | :--- | :--- | :--- | :--- | | Loyal | 18 | 25 | 8.5 | 102,500 | | Potential Loyalist | 14 | 45 | 4.2 | 78,400 | | Champions | 12 | 10 | 12.0 | 145,200 | | At Risk | 10 | 150 | 5.5 | 89,000 | | Lost Customer | 8 | 320 | 1.0 | 45,000 |
 
