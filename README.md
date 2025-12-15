@@ -6,7 +6,7 @@ This project uses SQL to analyze sales data for an automobile retailer. The main
 ---
 
 ## 1. Data Overview
-Before analyzing, I inspected the raw dataset to understand the available columns and data types.
+Before analyzing, I inspected the raw dataset to understand the available columns and data types. 
 
 ```sql
 SELECT * FROM SAMPLE_RFM LIMIT 5;  
