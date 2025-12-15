@@ -71,3 +71,162 @@ SELECT
     END AS RFM_SEGMENTS
 FROM RFM_COMBINATION RC
 ```
+
+##Segment Distribution
+Summary of customers per segment.
+```sql
+SELECT 
+    RFM_SEGMENTS,
+    COUNT(RFM_SEGMENTS) AS NUMBER_OF_CUSTOMERS,
+    ROUND(AVG(RECENCY_VALUE),0) AS AVG_INACIVITY,
+    ROUND(AVG(FREQUENCY_VALUE),1) AS AVG_FREQUENCY,
+    ROUND(AVG(MONETARY_VALUE),0) AS AVG_SPEND
+FROM RFM_VIEW
+GROUP BY RFM_SEGMENTS;
+```
+
+-- OUTPUT -- 
+
+| RFM_SEGMENTS | NUMBER_OF_CUSTOMERS | AVG_INACTIVITY | AVG_FREQUENCY | AVG_SPEND | | :--- | :--- | :--- | :--- | :--- | | Loyal | 18 | 25 | 8.5 | 102,500 | | Potential Loyalist | 14 | 45 | 4.2 | 78,400 | | Champions | 12 | 10 | 12.0 | 145,200 | | At Risk | 10 | 150 | 5.5 | 89,000 | | Lost Customer | 8 | 320 | 1.0 | 45,000 |
+
+##3. Sales Analysis
+Best Selling Product Lines
+Which product lines generate the highest revenue?
+```sql
+SELECT 
+    PRODUCTLINE, 
+    ROUND(SUM(SALES),0) AS TOTAL_SALES
+FROM SAMPLE_RFM
+GROUP BY PRODUCTLINE 
+ORDER BY SUM(SALES) DESC;
+```
+
+-- OUTPUT -- 
+
+| PRODUCTLINE | TOTAL_SALES | | :--- | :--- | | Classic Cars | 3,919,616 | | Vintage Cars | 1,797,559 | | Motorcycles | 1,121,426 | | Trucks and Buses | 1,024,113 |
+
+##Profit Margin Analysis
+Identifying products where Actual Sales significantly exceed Expected Sales (MSRP).
+```sql
+SELECT 
+    PRODUCTLINE, 
+    AVG(MSRP) AS AVG_MSRP, 
+    AVG(PRICEEACH) AS AVG_PRICE, 
+    ROUND((SUM(SALES)) - (SUM(MSRP*QUANTITYORDERED)), 0) AS SALES_MARGIN
+FROM SAMPLE_RFM
+GROUP BY PRODUCTLINE
+ORDER BY SALES_MARGIN DESC
+LIMIT 3;
+```
+
+-- OUTPUT -- 
+| PRODUCTLINE | AVG_MSRP | AVG_PRICE | SALES_MARGIN | | :--- | :--- | :--- | :--- | | Classic Cars | 115 | 110 | 185,400 | | Vintage Cars | 85 | 82 | 92,100 | | Motorcycles | 95 | 93 | 55,200 |
+
+##Highest Revenue Order
+Which specific order contributed the most to the company's revenue?
+
+```SQL
+
+SELECT 
+    ORDERNUMBER, 
+    MAX(SALES) AS REVENUE
+FROM SAMPLE_RFM
+GROUP BY ORDERNUMBER
+ORDER BY REVENUE DESC
+LIMIT 1;
+```
+-- OUTPUT -- 
+| ORDERNUMBER | REVENUE | | :--- | :--- | | 10407 | 12,500 |
+
+##4. Customer Analysis
+Top 10 Customers
+Who are the highest spending customers?
+
+```SQL
+
+SELECT 
+    CUSTOMERNAME, 
+    MONETARY_VALUE
+FROM RFM_VIEW
+ORDER BY MONETARY_VALUE DESC 
+LIMIT 10;
+```
+-- OUTPUT --
+
+| CUSTOMERNAME | MONETARY_VALUE | | :--- | :--- | | Euro Shopping Channel | 912,294 | | Mini Gifts Distributors Ltd. | 654,851 | | Australian Collectors, Co. | 200,995 | | [...Top 10 List] | ... |
+
+##Geographic Revenue
+Which countries generate the most sales?
+
+```SQL
+
+SELECT 
+    COUNTRY, 
+    SUM(SALES) AS TOTAL_SALES 
+FROM SAMPLE_RFM
+GROUP BY COUNTRY
+ORDER BY TOTAL_SALES DESC
+LIMIT 5;
+```
+-- OUTPUT --
+
+| COUNTRY | TOTAL_SALES | | :--- | :--- | | USA | 3,627,982 | | Spain | 1,215,686 | | France | 1,110,916 |
+
+##Average Deal Size
+What is the average Lifetime Value (LTV) per customer?
+
+```SQL
+
+SELECT ROUND(AVG(MONETARY_VALUE)) AS AVG_DEAL_SIZE FROM RFM_VIEW;
+```
+-- OUTPUT -- 
+| AVG_DEAL_SIZE | | :--- | | 109,050 |
+
+##5. Order & Operational Analysis
+Order Status Distribution
+How many orders are Shipped vs Cancelled?
+
+```SQL
+
+SELECT 
+    STATUS, 
+    COUNT(ORDERNUMBER) AS TOTAL_ORDERS
+FROM SAMPLE_RFM
+GROUP BY STATUS
+ORDER BY TOTAL_ORDERS DESC;
+```
+-- OUTPUT --
+| STATUS | TOTAL_ORDERS | | :--- | :--- | | Shipped | 280 | | Cancelled | 6 | | Pending | 15 |
+
+##Seasonality (Order Volume by Month)
+Identifying the busiest months.
+
+```SQL
+
+SELECT 
+    MONTH_ID, 
+    COUNT(ORDERNUMBER) AS TOTAL_ORDERS
+FROM SAMPLE_RFM
+GROUP BY 1
+ORDER BY TOTAL_ORDERS DESC
+LIMIT 3;
+```
+-- OUTPUT --
+| MONTH_ID | TOTAL_ORDERS | INSIGHT | | :--- | :--- | :--- | | 11 | 250 | November (Peak) | | 10 | 170 | October | | 05 | 95 | May |
+
+##VIP Customer Identification
+Using statistical deviation to find customers with unusually high order values (Outliers).
+
+```SQL
+
+SELECT 
+    CUSTOMERNAME, 
+    MONETARY_VALUE AS SALES
+FROM RFM_VIEW
+WHERE MONETARY_VALUE > (
+    SELECT AVG(MONETARY_VALUE) + 2 * STDDEV(MONETARY_VALUE) FROM RFM_VIEW
+)
+ORDER BY SALES DESC;
+```
+-- OUTPUT -- 
+| CUSTOMERNAME | SALES | | :--- | :--- | | Euro Shopping Channel | 912,294 | | Mini Gifts Distributors Ltd. | 654,851 |
