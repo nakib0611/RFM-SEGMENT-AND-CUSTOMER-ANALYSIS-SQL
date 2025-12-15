@@ -9,7 +9,7 @@ This project uses SQL to analyze sales data for an automobile retailer. The main
 Before analyzing, I inspected the raw dataset to understand the available columns and data types.
 
 ```sql
-SELECT * FROM SAMPLE_RFM LIMIT 5;
+SELECT * FROM SAMPLE_RFM LIMIT 5;  
 ```
 -- OUTPUT --
 ### 1. Data Overview
