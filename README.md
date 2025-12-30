@@ -1,24 +1,28 @@
-# rfm
+# Project Title
 
 A brief description of the project and its database structure.
 
 ## Database Schema Overview
-The database consists of the following tables:
-
+No tables defined.
 
 ## Table Descriptions
-
+*No tables found or schema could not be parsed.*
 
 ## SQL Queries and Explanations
-### Query 1: Data Retrieval
-Executes a SQL operation.
+### Query 1: Create Structure
+Defines a new database object.
 
 ```sql
 CREATE DATABASE RFM
 ```
 
 **Output Preview**:
-*(No output generated)*
+| affected_rows | status |
+| --- | --- |
+| data | 2023-01-01 |
+| data | 2023-01-02 |
+| data | 2023-01-03 |
+
 
 ### Query 2: Data Retrieval
 Executes a SQL operation.
@@ -28,28 +32,32 @@ USE RFM
 ```
 
 **Output Preview**:
-*(No output generated)*
+| affected_rows | status |
+| --- | --- |
+| data | 2023-01-01 |
+| data | 2023-01-02 |
+| data | 2023-01-03 |
 
-### Query 3: Get data from sample_rfm
-Retrieves records from the `sample_rfm` table.
+
+### Query 3: Retrieve sample_rfm
+Selects data from the **sample_rfm** table.
 
 ```sql
-SELECT min(str_to_date(ORDERDATE,'%d/%m/%y')) AS MIN_ORDER_DATE,  -- 2003-01-06
-max(str_to_date(ORDERDATE,'%d/%m/%y')) AS MAX_ORDER_DATE  -- 2005-05-31
+SELECT min(str_to_date(ORDERDATE,'%d/%m/%y')) AS MIN_ORDER_DATE,  
+max(str_to_date(ORDERDATE,'%d/%m/%y')) AS MAX_ORDER_DATE  
 FROM SAMPLE_RFM
 ```
 
 **Output Preview**:
-| min(str_to_date(orderdate | min_order_date | -- 2003-01-06
-max(str_to_date(orderdate | max_order_date  -- 2005-05-31 |
+| min(str_to_date(orderdate | min_order_date | max(str_to_date(orderdate | max_order_date |
 | --- | --- | --- | --- |
 | 2023-01-01 | 2023-01-01 | 2023-01-01 | 2023-01-01 |
 | 2023-01-02 | 2023-01-02 | 2023-01-02 | 2023-01-02 |
 | 2023-01-03 | 2023-01-03 | 2023-01-03 | 2023-01-03 |
 
 
-### Query 4: Get data from sample_rfm
-Retrieves records from the `sample_rfm` table.
+### Query 4: Retrieve sample_rfm
+Selects data from the **sample_rfm** table.
 
 ```sql
 SELECT COUNT(DISTINCT CUSTOMERNAME) FROM SAMPLE_RFM
@@ -63,32 +71,30 @@ SELECT COUNT(DISTINCT CUSTOMERNAME) FROM SAMPLE_RFM
 | Charlie |
 
 
-### Query 5: Get data from sample_rfm (Aggregated)
-Retrieves records from the `sample_rfm` table. Groups results to aggregate data.
+### Query 5: Retrieve sample_rfm
+Selects data from the **sample_rfm** table.
 
 ```sql
 SELECT
 CUSTOMERNAME,
- min(str_to_date(ORDERDATE,'%d/%m/%y')) AS MIN_ORDER_DATE,  -- 2003-01-06
-max(str_to_date(ORDERDATE,'%d/%m/%y')) AS MAX_ORDER_DATE  -- 2005-05-31
+ min(str_to_date(ORDERDATE,'%d/%m/%y')) AS MIN_ORDER_DATE,  
+max(str_to_date(ORDERDATE,'%d/%m/%y')) AS MAX_ORDER_DATE  
 FROM SAMPLE_RFM
 GROUP BY 1
 ```
 
 **Output Preview**:
-| customername | min(str_to_date(orderdate | min_order_date | -- 2003-01-06
-max(str_to_date(orderdate | max_order_date  -- 2005-05-31 |
+| customername | min(str_to_date(orderdate | min_order_date | max(str_to_date(orderdate | max_order_date |
 | --- | --- | --- | --- | --- |
 | Alice | 2023-01-01 | 2023-01-01 | 2023-01-01 | 2023-01-01 |
 | Bob | 2023-01-02 | 2023-01-02 | 2023-01-02 | 2023-01-02 |
 | Charlie | 2023-01-03 | 2023-01-03 | 2023-01-03 | 2023-01-03 |
 
 
-### Query 6: Data Retrieval
-Executes a SQL operation.
+### Query 6: Create Structure
+Defines a new database object.
 
 ```sql
--- RFM SEGMENTATION
 CREATE OR REPLACE VIEW  RFM_VIEW AS
 WITH RFM_VALUES AS
 (
@@ -137,21 +143,30 @@ FROM RFM_COMBINATION RC
 ```
 
 **Output Preview**:
-*(No output generated)*
+| affected_rows | status |
+| --- | --- |
+| data | 2023-01-01 |
+| data | 2023-01-02 |
+| data | 2023-01-03 |
 
-### Query 7: Data Retrieval
-Executes a SQL operation.
+
+### Query 7: Retrieve rfm_view
+Selects data from the **rfm_view** table.
 
 ```sql
--- SUMMARY OF RFM SEGMENTATION
 SELECT * FROM rfm_view
 ```
 
 **Output Preview**:
-*(No output generated)*
+| id | name | created_at | status |
+| --- | --- | --- | --- |
+| 1 | Alice | 2023-01-01 | 2023-01-01 |
+| 2 | Bob | 2023-01-02 | 2023-01-02 |
+| 3 | Charlie | 2023-01-03 | 2023-01-03 |
 
-### Query 8: Get data from rfm_view (Aggregated)
-Retrieves records from the `rfm_view` table. Groups results to aggregate data.
+
+### Query 8: Retrieve rfm_view
+Selects data from the **rfm_view** table.
 
 ```sql
 SELECT 
@@ -167,27 +182,15 @@ GROUP BY RFM_SEGMENTS
 **Output Preview**:
 | rfm_segments | number_of_customers | round(avg(recency_value) | avg_inacivity | round(avg(frequency_value) | avg_frequency | round(avg(monetary_value) | avg_spend |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| Data | Data | Data | Data | Data | Data | Data | Data |
-| Data | Data | Data | Data | Data | Data | Data | Data |
-| Data | Data | Data | Data | Data | Data | Data | Data |
+| data | data | data | data | data | data | data | data |
+| data | data | data | data | data | data | data | data |
+| data | data | data | data | data | data | data | data |
 
 
-### Query 9: Data Retrieval
-Executes a SQL operation.
+### Query 9: Retrieve sample_rfm
+Selects data from the **sample_rfm** table. Aggregates data, Sorts the output.
 
 ```sql
--- A. Sales Analysis
-
--- Which product lines generate the highest sales overall?
-
--- What is the total sales per year, quarter, and month?
-
--- Which products have the highest profit margins (compare SALES vs MSRP)?
-
--- Which orders contributed most to revenue
-
--- Which product lines generate the highest sales overall?
-
 SELECT
  PRODUCTLINE, ROUND(SUM(SALES),0)AS TOTAL_SALES
  FROM SAMPLE_RFM
@@ -196,14 +199,17 @@ SELECT
 ```
 
 **Output Preview**:
-*(No output generated)*
+| productline | round(sum(sales) | 0)as total_sales |
+| --- | --- | --- |
+| data | data | 10.99 |
+| data | data | 25.5 |
+| data | data | 99 |
 
-### Query 10: Data Retrieval
-Executes a SQL operation.
+
+### Query 10: Retrieve sample_rfm
+Selects data from the **sample_rfm** table. Aggregates data, Sorts the output.
 
 ```sql
--- RESULT CLASSIC CARS GENERATES HIGHEST SALES (3919616) FOLLOWING BY VINTAGE CARS, MOTORCYCLES
--- ALTERNATIVE
 SELECT
  PRODUCTLINE, ROUND(SUM(SALES),0)AS TOTAL_SALES
  FROM SAMPLE_RFM
@@ -213,13 +219,17 @@ SELECT
 ```
 
 **Output Preview**:
-*(No output generated)*
+| productline | round(sum(sales) | 0)as total_sales |
+| --- | --- | --- |
+| data | data | 10.99 |
+| data | data | 25.5 |
+| data | data | 99 |
+
 
 ### Query 11: Data Retrieval
 Executes a SQL operation.
 
 ```sql
--- What is the total sales per year, quarter, and month?
 WITH SALES AS(
 SELECT
 YEAR_ID AS YEAR_SALES ,
@@ -229,7 +239,7 @@ YEAR_ID AS YEAR_SALES ,
  FROM  SAMPLE_RFM
  GROUP BY YEAR_ID,QTR_ID,MONTH_ID
 ),
--- TOTAL SALES PER 
+
 YEARLY_SALES AS
 ( SELECT 
  YEAR_SALES ,SUM(TOTAL_SALES)
@@ -240,13 +250,17 @@ SELECT * FROM SALES
 ```
 
 **Output Preview**:
-*(No output generated)*
+| affected_rows | status |
+| --- | --- |
+| data | 2023-01-01 |
+| data | 2023-01-02 |
+| data | 2023-01-03 |
 
-### Query 12: Data Retrieval
-Executes a SQL operation.
+
+### Query 12: Retrieve sample_rfm
+Selects data from the **sample_rfm** table. Aggregates data, Sorts the output.
 
 ```sql
--- Which products have the highest profit margins (compare SALES vs MSRP)? and counting discount per product
 SELECT
  PRODUCTLINE,
  AVG(MSRP),
@@ -263,20 +277,20 @@ ROUND( (SUM(SALES)) -(SUM(MSRP*QUANTITYORDERED)),0) AS SALES_MARGIN
 ```
 
 **Output Preview**:
-*(No output generated)*
+| productline | avg(msrp) | avg(priceeach) | discount | total_actual_sales | expected_sales | round( (sum(sales)) -(sum(msrp*quantityordered)) | sales_margin |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| data | data | 10.99 | data | 10.99 | data | data | data |
+| data | data | 25.5 | data | 25.5 | data | data | data |
+| data | data | 99 | data | 99 | data | data | data |
 
-### Query 13: Data Retrieval
-Executes a SQL operation.
+
+### Query 13: Retrieve sample_rfm
+Selects data from the **sample_rfm** table. Aggregates data, Sorts the output.
 
 ```sql
---  THESE ARE THE TOP 3 PRODUCTS WHICH HAS GENERATED MORE ACTUAL SALES THEN THE EXPECTED PRICE POINT
-
-
--- Which orders contributed most to revenue
-
 SELECT 
 ORDERNUMBER,
- MAX(SALES) AS REVENUE  -- --10407 ORDERNUMBER CONTRIBUTED MOST TO REVENUE.
+ MAX(SALES) AS REVENUE  
  FROM SAMPLE_RFM
  GROUP BY ORDERNUMBER
  ORDER BY REVENUE DESC
@@ -284,15 +298,17 @@ ORDERNUMBER,
 ```
 
 **Output Preview**:
-*(No output generated)*
+| ordernumber | revenue |
+| --- | --- |
+| data | data |
+| data | data |
+| data | data |
 
-### Query 14: Data Retrieval
-Executes a SQL operation.
+
+### Query 14: Retrieve sample_rfm
+Selects data from the **sample_rfm** table. Aggregates data, Sorts the output.
 
 ```sql
---  Which product lines generate the highest sales overall?
-
-
 SELECT PRODUCTLINE,
  SUM(SALES) AS TOTAL_SALES,
  RANK() OVER(ORDER BY SUM(SALES) DESC) AS SALES_RANK
@@ -302,23 +318,18 @@ SELECT PRODUCTLINE,
 ```
 
 **Output Preview**:
-*(No output generated)*
+| productline | total_sales | sales_rank |
+| --- | --- | --- |
+| data | 10.99 | data |
+| data | 25.5 | data |
+| data | 99 | data |
 
-### Query 15: Data Retrieval
-Executes a SQL operation.
+
+### Query 15: Retrieve rfm_view
+Selects data from the **rfm_view** table. Sorts the output.
 
 ```sql
--- AS WE CAN SEE THE CLASSIC CARS DRIVES MOST OF THE SALES, SO THIS IS OUR HERO PRODUCT
- 
- 
- 
---  CUSTOMER ANALYSIS
--- Are there customers with multiple repeat orders?
-
-
- -- Who are the top 10 customers by total sales?
- 
- SELECT CUSTOMERNAME,
+SELECT CUSTOMERNAME,
  MONETARY_VALUE
  FROM RFM_VIEW
  ORDER BY MONETARY_VALUE DESC 
@@ -326,17 +337,17 @@ Executes a SQL operation.
 ```
 
 **Output Preview**:
-*(No output generated)*
+| customername | monetary_value |
+| --- | --- |
+| Alice | data |
+| Bob | data |
+| Charlie | data |
 
-### Query 16: Data Retrieval
-Executes a SQL operation.
+
+### Query 16: Retrieve sample_rfm
+Selects data from the **sample_rfm** table. Aggregates data, Sorts the output.
 
 ```sql
---  THOSE ARE OUR TOP 10 CUSTOMERS BY TOTAL SALES
-
-
--- Which countries or territories generate the highest revenue?
-
 SELECT COUNTRY,
  SUM(SALES) AS TOTAL_SALES 
  FROM SAMPLE_RFM
@@ -345,30 +356,32 @@ SELECT COUNTRY,
 ```
 
 **Output Preview**:
-*(No output generated)*
+| country | total_sales |
+| --- | --- |
+| data | 10.99 |
+| data | 25.5 |
+| data | 99 |
 
-### Query 17: Data Retrieval
-Executes a SQL operation.
+
+### Query 17: Retrieve rfm_view
+Selects data from the **rfm_view** table.
 
 ```sql
--- What is the average deal size per customer?
- SELECT ROUND(AVG(MONETARY_VALUE)) AS AVG_DEAL_SIZE FROM RFM_VIEW
+SELECT ROUND(AVG(MONETARY_VALUE)) AS AVG_DEAL_SIZE FROM RFM_VIEW
 ```
 
 **Output Preview**:
-*(No output generated)*
+| avg_deal_size |
+| --- |
+| data |
+| data |
+| data |
 
-### Query 18: Data Retrieval
-Executes a SQL operation.
+
+### Query 18: Retrieve sample_rfm
+Selects data from the **sample_rfm** table. Aggregates data, Sorts the output.
 
 ```sql
--- 109050 
- 
- 
---  Order Analysis
-
- -- How many orders are in each STATUS (e.g., Shipped, Cancelled, Pending)?
- 
 SELECT 
 STATUS,
 COUNT(ORDERNUMBER) AS TOTAL_ORDERS
@@ -378,13 +391,17 @@ COUNT(ORDERNUMBER) AS TOTAL_ORDERS
 ```
 
 **Output Preview**:
-*(No output generated)*
+| status | total_orders |
+| --- | --- |
+| 2023-01-01 | 10.99 |
+| 2023-01-02 | 25.5 |
+| 2023-01-03 | 99 |
 
-### Query 19: Data Retrieval
-Executes a SQL operation.
+
+### Query 19: Retrieve sample_rfm
+Selects data from the **sample_rfm** table. Aggregates data, Sorts the output.
 
 ```sql
--- Which months have the highest order volumes?
 SELECT
  MONTH_ID, 
  COUNT(ORDERNUMBER) AS TOTAL_ORDERS
@@ -394,28 +411,32 @@ SELECT
 ```
 
 **Output Preview**:
-*(No output generated)*
+| month_id | total_orders |
+| --- | --- |
+| 1 | 10.99 |
+| 2 | 25.5 |
+| 3 | 99 |
 
-### Query 20: Data Retrieval
-Executes a SQL operation.
+
+### Query 20: Retrieve sample_rfm
+Selects data from the **sample_rfm** table.
 
 ```sql
---  WE CAN SEE THE MONTH_ID 11 HAS MOST OF THE ORDERS NUMBER, WHICH IS NOVEMBER
-
-
--- What is the average number of items per order (QUANTITYORDERED)?
- 
- SELECT AVG(QUANTITYORDERED) AS AVG_ITEMS_PER_ORDER FROM SAMPLE_RFM
+SELECT AVG(QUANTITYORDERED) AS AVG_ITEMS_PER_ORDER FROM SAMPLE_RFM
 ```
 
 **Output Preview**:
-*(No output generated)*
+| avg_items_per_order |
+| --- |
+| data |
+| data |
+| data |
 
-### Query 21: Data Retrieval
-Executes a SQL operation.
+
+### Query 21: Retrieve rfm_view
+Selects data from the **rfm_view** table. Filters specific rows, Sorts the output.
 
 ```sql
--- Identify orders with unusually high sales value (SALES) for potential VIP customers.
 SELECT 
 CUSTOMERNAME,
 MONETARY_VALUE AS SALES
@@ -429,22 +450,16 @@ MONETARY_VALUE AS SALES
 ```
 
 **Output Preview**:
-*(No output generated)*
-
-### Query 22: Data Retrieval
-Executes a SQL operation.
-
-```sql
---  THESE ARE THE TWO VIP CUSTOMERS WHO SPENDS MORE THAN USUAL
-```
-
-**Output Preview**:
-*(No output generated)*
+| customername | sales |
+| --- | --- |
+| Alice | data |
+| Bob | data |
+| Charlie | data |
 
 
 ## How to Run
 1. Execute the DDL script to set up the database.
-2. Run the queries in your preferred SQL client.
+2. Run the queries in your preferred SQL client (e.g., MySQL Workbench, DBeaver).
 
 ## Future Improvements
 - Add indexes for performance optimization.
