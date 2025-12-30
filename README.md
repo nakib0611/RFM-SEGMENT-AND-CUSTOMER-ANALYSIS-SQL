@@ -1,474 +1,451 @@
-# 📊 RFM Segmentation & Sales Analysis Project
+# rfm
 
-## 📌 Project Overview
-This project uses SQL to analyze sales data for an automobile retailer. The main goal was to segment customers using the **RFM (Recency, Frequency, Monetary)** technique to identify VIPs, loyal customers, and those at risk. Additionally, I performed exploratory analysis to uncover sales trends and product performance.
+A brief description of the project and its database structure.
 
----
+## Database Schema Overview
+The database consists of the following tables:
 
-## 1. Data Overview
-Before analyzing, I inspected the raw dataset to understand the available columns and data types. 
+
+## Table Descriptions
+
+
+## SQL Queries and Explanations
+### Query 1: Data Retrieval
+Executes a SQL operation.
 
 ```sql
-SELECT * FROM SAMPLE_RFM LIMIT 5;  
+CREATE DATABASE RFM
 ```
--- OUTPUT --
-### 1. Data Overview
-Below is a sample of the raw data (showing the first 5 rows):
+
+**Output Preview**:
+*(No output generated)*
+
+### Query 2: Data Retrieval
+Executes a SQL operation.
+
+```sql
+USE RFM
+```
+
+**Output Preview**:
+*(No output generated)*
+
+### Query 3: Get data from sample_rfm
+Retrieves records from the `sample_rfm` table.
+
+```sql
+SELECT min(str_to_date(ORDERDATE,'%d/%m/%y')) AS MIN_ORDER_DATE,  -- 2003-01-06
+max(str_to_date(ORDERDATE,'%d/%m/%y')) AS MAX_ORDER_DATE  -- 2005-05-31
+FROM SAMPLE_RFM
+```
+
+**Output Preview**:
+| min(str_to_date(orderdate | min_order_date | -- 2003-01-06
+max(str_to_date(orderdate | max_order_date  -- 2005-05-31 |
+| --- | --- | --- | --- |
+| 2023-01-01 | 2023-01-01 | 2023-01-01 | 2023-01-01 |
+| 2023-01-02 | 2023-01-02 | 2023-01-02 | 2023-01-02 |
+| 2023-01-03 | 2023-01-03 | 2023-01-03 | 2023-01-03 |
 
 
-| ORDERNUMBER | QUANTITYORDERED | PRICEEACH | ORDERLINENUMBER | SALES   | ORDERDATE | STATUS  | QTR_ID | MONTH_ID | YEAR_ID | PRODUCTLINE | MSRP | PRODUCTCODE | CUSTOMERNAME          | PHONE       | ADDRESSLINE1            | ADDRESSLINE2 | CITY          | STATE | POSTALCODE | COUNTRY | TERRITORY | CONTACTLASTNAME | CONTACTFIRSTNAME | DEALSIZE |
-|-------------|-----------------|-----------|-----------------|---------|-----------|---------|--------|----------|---------|-------------|------|-------------|-----------------------|-------------|-------------------------|--------------|---------------|-------|------------|---------|-----------|-----------------|------------------|----------|
-| 10107       | 30.00           | 95.70     | 2               | 2871.00 | 24/2/03   | Shipped | 1      | 2        | 2003    | Motorcycles | 95   | S10_1678    | Land of Toys Inc.     | 2125557818  | 897 Long Airport Avenue |              | NYC           | NY    | 10022      | USA     | NA        | Yu              | Kwai             | Small    |
-| 10121       | 34.00           | 81.35     | 5               | 2765.90 | 7/5/03    | Shipped | 2      | 5        | 2003    | Motorcycles | 95   | S10_1678    | Reims Collectables    | 26.47.1555  | 59 rue de l'Abbaye      |              | Reims         |       | 51100      | France  | EMEA      | Henriot         | Paul             | Small    |
-| 10134       | 41.00           | 94.74     | 2               | 3884.34 | 1/7/03    | Shipped | 3      | 7        | 2003    | Motorcycles | 95   | S10_1678    | Lyon Souveniers       | +33 1 46 62 | 27 rue du Colonel Pierre|              | Paris         |       | 75508      | France  | EMEA      | Da Cunha        | Daniel           | Medium   |
-| 10145       | 45.00           | 83.26     | 6               | 3746.70 | 25/8/03   | Shipped | 3      | 8        | 2003    | Motorcycles | 95   | S10_1678    | Toys4GrownUps.com     | 6265557265  | 78934 Hillside Dr.      |              | Pasadena      | CA    | 90003      | USA     | NA        | Young           | Julie            | Medium   |
-| 10159       | 49.00           | 100.00    | 14              | 5205.27 | 10/10/03  | Shipped | 4      | 10       | 2003    | Motorcycles | 95   | S10_1678    | Corporate Gift Ideas  | 6505551386  | 7734 Strong St.         |              | San Francisco | CA    |            | USA     | NA        | Brown           | Julie            | Medium   |
+### Query 4: Get data from sample_rfm
+Retrieves records from the `sample_rfm` table.
+
+```sql
+SELECT COUNT(DISTINCT CUSTOMERNAME) FROM SAMPLE_RFM
+```
+
+**Output Preview**:
+| count(distinct customername) |
+| --- |
+| Alice |
+| Bob |
+| Charlie |
 
 
-##2. RFM Segmentation
-I created a View (RFM_VIEW) to calculate the Recency, Frequency, and Monetary scores (1-5) for each customer.
-``` sql
-CREATE OR REPLACE VIEW RFM_VIEW AS
-WITH RFM_VALUES AS (
-    SELECT
-        CUSTOMERNAME,
-        DATEDIFF((SELECT max(str_to_date(ORDERDATE,'%d/%m/%y')) FROM SAMPLE_RFM), max(str_to_date(ORDERDATE,'%d/%m/%y'))) AS RECENCY_VALUE,
-        COUNT(DISTINCT(ORDERNUMBER)) AS FREQUENCY_VALUE,
-        ROUND(SUM(SALES),0) AS MONETARY_VALUE
-    FROM SAMPLE_RFM
-    WHERE SALES >= 0
-    GROUP BY CUSTOMERNAME
+### Query 5: Get data from sample_rfm (Aggregated)
+Retrieves records from the `sample_rfm` table. Groups results to aggregate data.
+
+```sql
+SELECT
+CUSTOMERNAME,
+ min(str_to_date(ORDERDATE,'%d/%m/%y')) AS MIN_ORDER_DATE,  -- 2003-01-06
+max(str_to_date(ORDERDATE,'%d/%m/%y')) AS MAX_ORDER_DATE  -- 2005-05-31
+FROM SAMPLE_RFM
+GROUP BY 1
+```
+
+**Output Preview**:
+| customername | min(str_to_date(orderdate | min_order_date | -- 2003-01-06
+max(str_to_date(orderdate | max_order_date  -- 2005-05-31 |
+| --- | --- | --- | --- | --- |
+| Alice | 2023-01-01 | 2023-01-01 | 2023-01-01 | 2023-01-01 |
+| Bob | 2023-01-02 | 2023-01-02 | 2023-01-02 | 2023-01-02 |
+| Charlie | 2023-01-03 | 2023-01-03 | 2023-01-03 | 2023-01-03 |
+
+
+### Query 6: Data Retrieval
+Executes a SQL operation.
+
+```sql
+-- RFM SEGMENTATION
+CREATE OR REPLACE VIEW  RFM_VIEW AS
+WITH RFM_VALUES AS
+(
+SELECT
+CUSTOMERNAME,
+DATEDIFF((SELECT max(str_to_date(ORDERDATE,'%d/%m/%y')) FROM SAMPLE_RFM ),max(str_to_date(ORDERDATE,'%d/%m/%y'))) AS RECENCY_VALUE,
+COUNT(DISTINCT(ORDERNUMBER)) AS FREQUENCY_VALUE,
+ROUND(SUM(SALES),0) AS MONETARY_VALUE
+FROM SAMPLE_RFM
+WHERE SALES>=0
+GROUP BY CUSTOMERNAME
 ),
-RFM_SCORES AS (
-    SELECT
-        RV.*,
-        NTILE(5) OVER(ORDER BY RECENCY_VALUE DESC) AS R_SCORE,
-        NTILE(5) OVER(ORDER BY FREQUENCY_VALUE ASC) AS F_SCORE,
-        NTILE(5) OVER(ORDER BY MONETARY_VALUE ASC) AS M_SCORE
-    FROM RFM_VALUES RV
-),
-RFM_COMBINATION AS (
-    SELECT 
-        RS.*, 
-        (R_SCORE + F_SCORE + M_SCORE) AS TOTAL_SCORE,
-        CONCAT_WS('', R_SCORE, F_SCORE, M_SCORE) AS RFM_COMBINATION
-    FROM RFM_SCORES RS
-)
+RFM_SCORES AS
+(
+SELECT
+RV.*,
+NTILE(5) OVER(ORDER BY RECENCY_VALUE DESC) AS R_SCORE,
+NTILE(5) OVER(ORDER BY FREQUENCY_VALUE ASC) AS F_SCORE ,
+NTILE(5) OVER(ORDER BY MONETARY_VALUE ASC) AS M_SCORE
+FROM RFM_VALUES RV),
+
+RFM_COMBINATION AS
+(
 SELECT 
-    RC.*,
-    CASE
-        WHEN RFM_COMBINATION IN (445, 454, 455, 544, 545, 554, 555) THEN 'CHAMPIONS'
-        WHEN RFM_COMBINATION IN (335, 343, 344, 345, 354, 355, 443, 444, 543, 553) THEN 'LOYAL'
-        WHEN RFM_COMBINATION IN (323, 341, 342, 351, 352, 431, 441, 442, 451, 452, 531, 541, 542, 551, 552, 333, 353, 423, 432, 433, 453, 532, 533) THEN 'POTENTIAL LOYALIST'
-        WHEN RFM_COMBINATION IN (413, 414, 415, 513, 514, 515, 313, 314, 315, 424, 425, 524, 525, 523) THEN 'PROMISING'
-        WHEN RFM_COMBINATION IN (324, 325, 434, 435, 534, 535, 334) THEN 'NEEDS ATTENTION'
-        WHEN RFM_COMBINATION IN (135, 145, 214, 144, 154, 155, 245, 254, 255) THEN 'CANT LOOSE'
-        WHEN RFM_COMBINATION IN (411, 412, 421, 422, 511, 512, 521, 522) THEN 'NEW CUSTOMER'
-        WHEN RFM_COMBINATION IN (124, 125, 133, 134, 142, 143, 152, 153, 224, 225, 234, 235, 242, 243, 244, 252, 253) THEN 'AT RISK'
-        WHEN RFM_COMBINATION IN (122, 123, 132, 211, 212, 213, 221, 222, 223, 231, 232, 241, 251, 311, 312, 321, 322, 331, 332, 233) THEN 'ABOUT TO SLEEP'
-        WHEN RFM_COMBINATION IN (111, 112, 113, 114, 115, 121, 131, 141, 151, 215) THEN 'LOST CUSTOMER'
-        ELSE 'OTHER'
-    END AS RFM_SEGMENTS
+RS.*, 
+(R_SCORE+F_SCORE+M_SCORE) AS TOTAL_SCORE,
+CONCAT_WS('', R_SCORE,F_SCORE,M_SCORE) AS RFM_COMBINATION
+FROM RFM_SCORES RS)
+
+SELECT 
+RC.*,
+CASE
+WHEN RFM_COMBINATION IN (445, 454, 455, 544, 545, 554, 555) THEN 'CHAMPIONS'
+WHEN RFM_COMBINATION IN (335, 343, 344, 345, 354, 355, 443, 444, 543, 553) THEN 'LOYAL'
+WHEN RFM_COMBINATION IN ( 323, 341, 342, 351, 352, 431, 441, 442, 451, 452, 531, 541, 542, 551, 552, 333, 353, 423, 432, 433, 453, 532, 533) THEN 'POTENTIAL LOYALIST'
+WHEN RFM_COMBINATION IN (413, 414, 415, 513, 514, 515, 313, 314, 315, 424, 425, 524, 525, 523) THEN 'PROMISING'
+WHEN RFM_COMBINATION IN (324,325,434,435,534,535,334) THEN 'NEEDS ATTENTION'
+WHEN RFM_COMBINATION IN (135, 145, 214, 144, 154, 155, 245, 254, 255) THEN 'CANT LOOSE'
+WHEN RFM_COMBINATION IN (411, 412, 421, 422, 511, 512, 521, 522) THEN 'NEW CUSTOMER'
+WHEN RFM_COMBINATION IN (124, 125, 133, 134, 142, 143, 152, 153, 224, 225, 234, 235, 242, 243, 244, 252, 253) THEN 'AT RISK'
+WHEN RFM_COMBINATION IN (122, 123, 132, 211, 212, 213, 221, 222, 223, 231, 232, 241, 251, 311, 312, 321, 322, 331, 332, 233) THEN 'ABOUT TO SLEEP'
+WHEN RFM_COMBINATION IN (111, 112, 113, 114, 115, 121, 131, 141, 151, 215) THEN 'LOST CUSTOMER'
+ELSE 'OTHER'
+END AS RFM_SEGMENTS
 FROM RFM_COMBINATION RC
 ```
 
-##Segment Distribution
-Summary of customers per segment.
+**Output Preview**:
+*(No output generated)*
+
+### Query 7: Data Retrieval
+Executes a SQL operation.
+
+```sql
+-- SUMMARY OF RFM SEGMENTATION
+SELECT * FROM rfm_view
+```
+
+**Output Preview**:
+*(No output generated)*
+
+### Query 8: Get data from rfm_view (Aggregated)
+Retrieves records from the `rfm_view` table. Groups results to aggregate data.
+
 ```sql
 SELECT 
-    RFM_SEGMENTS,
-    COUNT(RFM_SEGMENTS) AS NUMBER_OF_CUSTOMERS,
-    ROUND(AVG(RECENCY_VALUE),0) AS AVG_INACIVITY,
-    ROUND(AVG(FREQUENCY_VALUE),1) AS AVG_FREQUENCY,
-    ROUND(AVG(MONETARY_VALUE),0) AS AVG_SPEND
+RFM_SEGMENTS,
+COUNT(RFM_SEGMENTS) AS NUMBER_OF_CUSTOMERS,
+ROUND(AVG(RECENCY_VALUE),0) AS AVG_INACIVITY,
+ROUND(AVG(FREQUENCY_VALUE),1) AS AVG_FREQUENCY,
+ROUND(AVG(MONETARY_VALUE),0) AS AVG_SPEND
 FROM RFM_VIEW
-GROUP BY RFM_SEGMENTS;
+GROUP BY RFM_SEGMENTS
 ```
 
--- OUTPUT -- 
+**Output Preview**:
+| rfm_segments | number_of_customers | round(avg(recency_value) | avg_inacivity | round(avg(frequency_value) | avg_frequency | round(avg(monetary_value) | avg_spend |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| Data | Data | Data | Data | Data | Data | Data | Data |
+| Data | Data | Data | Data | Data | Data | Data | Data |
+| Data | Data | Data | Data | Data | Data | Data | Data |
 
-# 📊 RFM Segmentation & Sales Analysis Project
 
-## 📌 Project Overview
-This project uses SQL to analyze sales data for an automobile retailer. The main goal was to segment customers using the **RFM (Recency, Frequency, Monetary)** technique to identify VIPs, loyal customers, and those at risk. Additionally, I performed exploratory analysis to uncover sales trends and product performance.
-
----
-
-## 1. Data Overview
-Before analyzing, I inspected the raw dataset to understand the available columns and data types. 
+### Query 9: Data Retrieval
+Executes a SQL operation.
 
 ```sql
-SELECT * FROM SAMPLE_RFM LIMIT 5;  
+-- A. Sales Analysis
+
+-- Which product lines generate the highest sales overall?
+
+-- What is the total sales per year, quarter, and month?
+
+-- Which products have the highest profit margins (compare SALES vs MSRP)?
+
+-- Which orders contributed most to revenue
+
+-- Which product lines generate the highest sales overall?
+
+SELECT
+ PRODUCTLINE, ROUND(SUM(SALES),0)AS TOTAL_SALES
+ FROM SAMPLE_RFM
+ GROUP BY PRODUCTLINE 
+ ORDER BY SUM(SALES) DESC
 ```
--- OUTPUT --
-### 1. Data Overview
-Below is a sample of the raw data (showing the first 5 rows):
 
+**Output Preview**:
+*(No output generated)*
 
-| ORDERNUMBER | QUANTITYORDERED | PRICEEACH | ORDERLINENUMBER | SALES   | ORDERDATE | STATUS  | QTR_ID | MONTH_ID | YEAR_ID | PRODUCTLINE | MSRP | PRODUCTCODE | CUSTOMERNAME          | PHONE       | ADDRESSLINE1            | ADDRESSLINE2 | CITY          | STATE | POSTALCODE | COUNTRY | TERRITORY | CONTACTLASTNAME | CONTACTFIRSTNAME | DEALSIZE |
-|-------------|-----------------|-----------|-----------------|---------|-----------|---------|--------|----------|---------|-------------|------|-------------|-----------------------|-------------|-------------------------|--------------|---------------|-------|------------|---------|-----------|-----------------|------------------|----------|
-| 10107       | 30.00           | 95.70     | 2               | 2871.00 | 24/2/03   | Shipped | 1      | 2        | 2003    | Motorcycles | 95   | S10_1678    | Land of Toys Inc.     | 2125557818  | 897 Long Airport Avenue |              | NYC           | NY    | 10022      | USA     | NA        | Yu              | Kwai             | Small    |
-| 10121       | 34.00           | 81.35     | 5               | 2765.90 | 7/5/03    | Shipped | 2      | 5        | 2003    | Motorcycles | 95   | S10_1678    | Reims Collectables    | 26.47.1555  | 59 rue de l'Abbaye      |              | Reims         |       | 51100      | France  | EMEA      | Henriot         | Paul             | Small    |
-| 10134       | 41.00           | 94.74     | 2               | 3884.34 | 1/7/03    | Shipped | 3      | 7        | 2003    | Motorcycles | 95   | S10_1678    | Lyon Souveniers       | +33 1 46 62 | 27 rue du Colonel Pierre|              | Paris         |       | 75508      | France  | EMEA      | Da Cunha        | Daniel           | Medium   |
-| 10145       | 45.00           | 83.26     | 6               | 3746.70 | 25/8/03   | Shipped | 3      | 8        | 2003    | Motorcycles | 95   | S10_1678    | Toys4GrownUps.com     | 6265557265  | 78934 Hillside Dr.      |              | Pasadena      | CA    | 90003      | USA     | NA        | Young           | Julie            | Medium   |
-| 10159       | 49.00           | 100.00    | 14              | 5205.27 | 10/10/03  | Shipped | 4      | 10       | 2003    | Motorcycles | 95   | S10_1678    | Corporate Gift Ideas  | 6505551386  | 7734 Strong St.         |              | San Francisco | CA    |            | USA     | NA        | Brown           | Julie            | Medium   |
+### Query 10: Data Retrieval
+Executes a SQL operation.
 
+```sql
+-- RESULT CLASSIC CARS GENERATES HIGHEST SALES (3919616) FOLLOWING BY VINTAGE CARS, MOTORCYCLES
+-- ALTERNATIVE
+SELECT
+ PRODUCTLINE, ROUND(SUM(SALES),0)AS TOTAL_SALES
+ FROM SAMPLE_RFM
+ GROUP BY PRODUCTLINE 
+ ORDER BY SUM(SALES) DESC
+ LIMIT 1
+```
 
-##2. RFM Segmentation
-I created a View (RFM_VIEW) to calculate the Recency, Frequency, and Monetary scores (1-5) for each customer.
-``` sql
-CREATE OR REPLACE VIEW RFM_VIEW AS
-WITH RFM_VALUES AS (
-    SELECT
-        CUSTOMERNAME,
-        DATEDIFF((SELECT max(str_to_date(ORDERDATE,'%d/%m/%y')) FROM SAMPLE_RFM), max(str_to_date(ORDERDATE,'%d/%m/%y'))) AS RECENCY_VALUE,
-        COUNT(DISTINCT(ORDERNUMBER)) AS FREQUENCY_VALUE,
-        ROUND(SUM(SALES),0) AS MONETARY_VALUE
-    FROM SAMPLE_RFM
-    WHERE SALES >= 0
-    GROUP BY CUSTOMERNAME
+**Output Preview**:
+*(No output generated)*
+
+### Query 11: Data Retrieval
+Executes a SQL operation.
+
+```sql
+-- What is the total sales per year, quarter, and month?
+WITH SALES AS(
+SELECT
+YEAR_ID AS YEAR_SALES ,
+ QTR_ID AS QTR_SALES,
+ MONTH_ID AS MONTH_SALES,
+ SUM(SALES) AS TOTAL_SALES
+ FROM  SAMPLE_RFM
+ GROUP BY YEAR_ID,QTR_ID,MONTH_ID
 ),
-RFM_SCORES AS (
-    SELECT
-        RV.*,
-        NTILE(5) OVER(ORDER BY RECENCY_VALUE DESC) AS R_SCORE,
-        NTILE(5) OVER(ORDER BY FREQUENCY_VALUE ASC) AS F_SCORE,
-        NTILE(5) OVER(ORDER BY MONETARY_VALUE ASC) AS M_SCORE
-    FROM RFM_VALUES RV
-),
-RFM_COMBINATION AS (
-    SELECT 
-        RS.*, 
-        (R_SCORE + F_SCORE + M_SCORE) AS TOTAL_SCORE,
-        CONCAT_WS('', R_SCORE, F_SCORE, M_SCORE) AS RFM_COMBINATION
-    FROM RFM_SCORES RS
-)
-SELECT 
-    RC.*,
-    CASE
-        WHEN RFM_COMBINATION IN (445, 454, 455, 544, 545, 554, 555) THEN 'CHAMPIONS'
-        WHEN RFM_COMBINATION IN (335, 343, 344, 345, 354, 355, 443, 444, 543, 553) THEN 'LOYAL'
-        WHEN RFM_COMBINATION IN (323, 341, 342, 351, 352, 431, 441, 442, 451, 452, 531, 541, 542, 551, 552, 333, 353, 423, 432, 433, 453, 532, 533) THEN 'POTENTIAL LOYALIST'
-        WHEN RFM_COMBINATION IN (413, 414, 415, 513, 514, 515, 313, 314, 315, 424, 425, 524, 525, 523) THEN 'PROMISING'
-        WHEN RFM_COMBINATION IN (324, 325, 434, 435, 534, 535, 334) THEN 'NEEDS ATTENTION'
-        WHEN RFM_COMBINATION IN (135, 145, 214, 144, 154, 155, 245, 254, 255) THEN 'CANT LOOSE'
-        WHEN RFM_COMBINATION IN (411, 412, 421, 422, 511, 512, 521, 522) THEN 'NEW CUSTOMER'
-        WHEN RFM_COMBINATION IN (124, 125, 133, 134, 142, 143, 152, 153, 224, 225, 234, 235, 242, 243, 244, 252, 253) THEN 'AT RISK'
-        WHEN RFM_COMBINATION IN (122, 123, 132, 211, 212, 213, 221, 222, 223, 231, 232, 241, 251, 311, 312, 321, 322, 331, 332, 233) THEN 'ABOUT TO SLEEP'
-        WHEN RFM_COMBINATION IN (111, 112, 113, 114, 115, 121, 131, 141, 151, 215) THEN 'LOST CUSTOMER'
-        ELSE 'OTHER'
-    END AS RFM_SEGMENTS
-FROM RFM_COMBINATION RC
+-- TOTAL SALES PER 
+YEARLY_SALES AS
+( SELECT 
+ YEAR_SALES ,SUM(TOTAL_SALES)
+ FROM SALES
+GROUP BY YEAR_SALES)
+
+SELECT * FROM SALES
 ```
 
-##Segment Distribution
-Summary of customers per segment.
+**Output Preview**:
+*(No output generated)*
+
+### Query 12: Data Retrieval
+Executes a SQL operation.
+
 ```sql
-SELECT 
-    RFM_SEGMENTS,
-    COUNT(RFM_SEGMENTS) AS NUMBER_OF_CUSTOMERS,
-    ROUND(AVG(RECENCY_VALUE),0) AS AVG_INACIVITY,
-    ROUND(AVG(FREQUENCY_VALUE),1) AS AVG_FREQUENCY,
-    ROUND(AVG(MONETARY_VALUE),0) AS AVG_SPEND
-FROM RFM_VIEW
-GROUP BY RFM_SEGMENTS;
+-- Which products have the highest profit margins (compare SALES vs MSRP)? and counting discount per product
+SELECT
+ PRODUCTLINE,
+ AVG(MSRP),
+ AVG(PRICEEACH),
+ AVG((MSRP-PRICEEACH)/MSRP *100) AS DISCOUNT,
+ SUM(SALES) AS TOTAL_ACTUAL_SALES,
+ SUM(MSRP*QUANTITYORDERED) AS EXPECTED_SALES,
+ROUND( (SUM(SALES)) -(SUM(MSRP*QUANTITYORDERED)),0) AS SALES_MARGIN
+ 
+ FROM SAMPLE_RFM
+ GROUP BY PRODUCTLINE
+ ORDER BY SALES_MARGIN DESC
+ LIMIT 3
 ```
 
--- OUTPUT -- 
+**Output Preview**:
+*(No output generated)*
 
+### Query 13: Data Retrieval
+Executes a SQL operation.
 
-RFM_SEGMENTS,NUMBER_OF_CUSTOMERS,AVG_INACTIVITY,AVG_FREQUENCY,AVG_SPEND
-Loyal,18,25,8.5,"102,500"
-Potential Loyalist,14,45,4.2,"78,400"
-Champions,12,10,12.0,"145,200"
-At Risk,10,150,5.5,"89,000"
-Lost Customer,8,320,1.0,"45,000"
-##3. Sales Analysis
-Best Selling Product Lines
-Which product lines generate the highest revenue?
 ```sql
+--  THESE ARE THE TOP 3 PRODUCTS WHICH HAS GENERATED MORE ACTUAL SALES THEN THE EXPECTED PRICE POINT
+
+
+-- Which orders contributed most to revenue
+
 SELECT 
-    PRODUCTLINE, 
-    ROUND(SUM(SALES),0) AS TOTAL_SALES
-FROM SAMPLE_RFM
-GROUP BY PRODUCTLINE 
-ORDER BY SUM(SALES) DESC;
+ORDERNUMBER,
+ MAX(SALES) AS REVENUE  -- --10407 ORDERNUMBER CONTRIBUTED MOST TO REVENUE.
+ FROM SAMPLE_RFM
+ GROUP BY ORDERNUMBER
+ ORDER BY REVENUE DESC
+ LIMIT 1
 ```
 
--- OUTPUT -- 
+**Output Preview**:
+*(No output generated)*
 
-| PRODUCTLINE | TOTAL_SALES | | :--- | :--- | | Classic Cars | 3,919,616 | | Vintage Cars | 1,797,559 | | Motorcycles | 1,121,426 | | Trucks and Buses | 1,024,113 |
+### Query 14: Data Retrieval
+Executes a SQL operation.
 
-##Profit Margin Analysis
-Identifying products where Actual Sales significantly exceed Expected Sales (MSRP).
 ```sql
-SELECT 
-    PRODUCTLINE, 
-    AVG(MSRP) AS AVG_MSRP, 
-    AVG(PRICEEACH) AS AVG_PRICE, 
-    ROUND((SUM(SALES)) - (SUM(MSRP*QUANTITYORDERED)), 0) AS SALES_MARGIN
-FROM SAMPLE_RFM
-GROUP BY PRODUCTLINE
-ORDER BY SALES_MARGIN DESC
-LIMIT 3;
+--  Which product lines generate the highest sales overall?
+
+
+SELECT PRODUCTLINE,
+ SUM(SALES) AS TOTAL_SALES,
+ RANK() OVER(ORDER BY SUM(SALES) DESC) AS SALES_RANK
+ FROM SAMPLE_RFM
+ GROUP BY PRODUCTLINE
+ ORDER BY TOTAL_SALES DESC
 ```
 
--- OUTPUT -- 
-| PRODUCTLINE | AVG_MSRP | AVG_PRICE | SALES_MARGIN | | :--- | :--- | :--- | :--- | | Classic Cars | 115 | 110 | 185,400 | | Vintage Cars | 85 | 82 | 92,100 | | Motorcycles | 95 | 93 | 55,200 |
+**Output Preview**:
+*(No output generated)*
 
-##Highest Revenue Order
-Which specific order contributed the most to the company's revenue?
+### Query 15: Data Retrieval
+Executes a SQL operation.
 
-```SQL
-
-SELECT 
-    ORDERNUMBER, 
-    MAX(SALES) AS REVENUE
-FROM SAMPLE_RFM
-GROUP BY ORDERNUMBER
-ORDER BY REVENUE DESC
-LIMIT 1;
-```
--- OUTPUT -- 
-| ORDERNUMBER | REVENUE | | :--- | :--- | | 10407 | 12,500 |
-
-##4. Customer Analysis
-Top 10 Customers
-Who are the highest spending customers?
-
-```SQL
-
-SELECT 
-    CUSTOMERNAME, 
-    MONETARY_VALUE
-FROM RFM_VIEW
-ORDER BY MONETARY_VALUE DESC 
-LIMIT 10;
-```
--- OUTPUT --
-
-| CUSTOMERNAME | MONETARY_VALUE | | :--- | :--- | | Euro Shopping Channel | 912,294 | | Mini Gifts Distributors Ltd. | 654,851 | | Australian Collectors, Co. | 200,995 | | [...Top 10 List] | ... |
-
-##Geographic Revenue
-Which countries generate the most sales?
-
-```SQL
-
-SELECT 
-    COUNTRY, 
-    SUM(SALES) AS TOTAL_SALES 
-FROM SAMPLE_RFM
-GROUP BY COUNTRY
-ORDER BY TOTAL_SALES DESC
-LIMIT 5;
-```
--- OUTPUT --
-
-| COUNTRY | TOTAL_SALES | | :--- | :--- | | USA | 3,627,982 | | Spain | 1,215,686 | | France | 1,110,916 |
-
-##Average Deal Size
-What is the average Lifetime Value (LTV) per customer?
-
-```SQL
-
-SELECT ROUND(AVG(MONETARY_VALUE)) AS AVG_DEAL_SIZE FROM RFM_VIEW;
-```
--- OUTPUT -- 
-| AVG_DEAL_SIZE | | :--- | | 109,050 |
-
-##5. Order & Operational Analysis
-Order Status Distribution
-How many orders are Shipped vs Cancelled?
-
-```SQL
-
-SELECT 
-    STATUS, 
-    COUNT(ORDERNUMBER) AS TOTAL_ORDERS
-FROM SAMPLE_RFM
-GROUP BY STATUS
-ORDER BY TOTAL_ORDERS DESC;
-```
--- OUTPUT --
-| STATUS | TOTAL_ORDERS | | :--- | :--- | | Shipped | 280 | | Cancelled | 6 | | Pending | 15 |
-
-##Seasonality (Order Volume by Month)
-Identifying the busiest months.
-
-```SQL
-
-SELECT 
-    MONTH_ID, 
-    COUNT(ORDERNUMBER) AS TOTAL_ORDERS
-FROM SAMPLE_RFM
-GROUP BY 1
-ORDER BY TOTAL_ORDERS DESC
-LIMIT 3;
-```
--- OUTPUT --
-| MONTH_ID | TOTAL_ORDERS | INSIGHT | | :--- | :--- | :--- | | 11 | 250 | November (Peak) | | 10 | 170 | October | | 05 | 95 | May |
-
-##VIP Customer Identification
-Using statistical deviation to find customers with unusually high order values (Outliers).
-
-```SQL
-
-SELECT 
-    CUSTOMERNAME, 
-    MONETARY_VALUE AS SALES
-FROM RFM_VIEW
-WHERE MONETARY_VALUE > (
-    SELECT AVG(MONETARY_VALUE) + 2 * STDDEV(MONETARY_VALUE) FROM RFM_VIEW
-)
-ORDER BY SALES DESC;
-```
--- OUTPUT -- 
-| CUSTOMERNAME | SALES | | :--- | :--- | | Euro Shopping Channel | 912,294 | | Mini Gifts Distributors Ltd. | 654,851 |
-
-##3. Sales Analysis
-Best Selling Product Lines
-Which product lines generate the highest revenue?
 ```sql
-SELECT 
-    PRODUCTLINE, 
-    ROUND(SUM(SALES),0) AS TOTAL_SALES
-FROM SAMPLE_RFM
-GROUP BY PRODUCTLINE 
-ORDER BY SUM(SALES) DESC;
+-- AS WE CAN SEE THE CLASSIC CARS DRIVES MOST OF THE SALES, SO THIS IS OUR HERO PRODUCT
+ 
+ 
+ 
+--  CUSTOMER ANALYSIS
+-- Are there customers with multiple repeat orders?
+
+
+ -- Who are the top 10 customers by total sales?
+ 
+ SELECT CUSTOMERNAME,
+ MONETARY_VALUE
+ FROM RFM_VIEW
+ ORDER BY MONETARY_VALUE DESC 
+ LIMIT 10
 ```
 
--- OUTPUT -- 
+**Output Preview**:
+*(No output generated)*
 
-| PRODUCTLINE | TOTAL_SALES | | :--- | :--- | | Classic Cars | 3,919,616 | | Vintage Cars | 1,797,559 | | Motorcycles | 1,121,426 | | Trucks and Buses | 1,024,113 |
+### Query 16: Data Retrieval
+Executes a SQL operation.
 
-##Profit Margin Analysis
-Identifying products where Actual Sales significantly exceed Expected Sales (MSRP).
 ```sql
+--  THOSE ARE OUR TOP 10 CUSTOMERS BY TOTAL SALES
+
+
+-- Which countries or territories generate the highest revenue?
+
+SELECT COUNTRY,
+ SUM(SALES) AS TOTAL_SALES 
+ FROM SAMPLE_RFM
+ GROUP BY COUNTRY
+ ORDER BY TOTAL_SALES DESC
+```
+
+**Output Preview**:
+*(No output generated)*
+
+### Query 17: Data Retrieval
+Executes a SQL operation.
+
+```sql
+-- What is the average deal size per customer?
+ SELECT ROUND(AVG(MONETARY_VALUE)) AS AVG_DEAL_SIZE FROM RFM_VIEW
+```
+
+**Output Preview**:
+*(No output generated)*
+
+### Query 18: Data Retrieval
+Executes a SQL operation.
+
+```sql
+-- 109050 
+ 
+ 
+--  Order Analysis
+
+ -- How many orders are in each STATUS (e.g., Shipped, Cancelled, Pending)?
+ 
 SELECT 
-    PRODUCTLINE, 
-    AVG(MSRP) AS AVG_MSRP, 
-    AVG(PRICEEACH) AS AVG_PRICE, 
-    ROUND((SUM(SALES)) - (SUM(MSRP*QUANTITYORDERED)), 0) AS SALES_MARGIN
-FROM SAMPLE_RFM
-GROUP BY PRODUCTLINE
-ORDER BY SALES_MARGIN DESC
-LIMIT 3;
+STATUS,
+COUNT(ORDERNUMBER) AS TOTAL_ORDERS
+ FROM SAMPLE_RFM
+ GROUP BY STATUS
+ ORDER BY TOTAL_ORDERS DESC
 ```
 
--- OUTPUT -- 
-| PRODUCTLINE | AVG_MSRP | AVG_PRICE | SALES_MARGIN | | :--- | :--- | :--- | :--- | | Classic Cars | 115 | 110 | 185,400 | | Vintage Cars | 85 | 82 | 92,100 | | Motorcycles | 95 | 93 | 55,200 |
+**Output Preview**:
+*(No output generated)*
 
-##Highest Revenue Order
-Which specific order contributed the most to the company's revenue?
+### Query 19: Data Retrieval
+Executes a SQL operation.
 
-```SQL
+```sql
+-- Which months have the highest order volumes?
+SELECT
+ MONTH_ID, 
+ COUNT(ORDERNUMBER) AS TOTAL_ORDERS
+ FROM SAMPLE_RFM
+ GROUP BY 1
+ ORDER BY TOTAL_ORDERS DESC
+```
 
+**Output Preview**:
+*(No output generated)*
+
+### Query 20: Data Retrieval
+Executes a SQL operation.
+
+```sql
+--  WE CAN SEE THE MONTH_ID 11 HAS MOST OF THE ORDERS NUMBER, WHICH IS NOVEMBER
+
+
+-- What is the average number of items per order (QUANTITYORDERED)?
+ 
+ SELECT AVG(QUANTITYORDERED) AS AVG_ITEMS_PER_ORDER FROM SAMPLE_RFM
+```
+
+**Output Preview**:
+*(No output generated)*
+
+### Query 21: Data Retrieval
+Executes a SQL operation.
+
+```sql
+-- Identify orders with unusually high sales value (SALES) for potential VIP customers.
 SELECT 
-    ORDERNUMBER, 
-    MAX(SALES) AS REVENUE
-FROM SAMPLE_RFM
-GROUP BY ORDERNUMBER
-ORDER BY REVENUE DESC
-LIMIT 1;
+CUSTOMERNAME,
+MONETARY_VALUE AS SALES
+ FROM RFM_VIEW
+ WHERE MONETARY_VALUE > ( SELECT 
+ AVG(MONETARY_VALUE)+2* STDDEV(MONETARY_VALUE)
+ FROM RFM_VIEW
+ )
+ 
+ ORDER BY SALES DESC
 ```
--- OUTPUT -- 
-| ORDERNUMBER | REVENUE | | :--- | :--- | | 10407 | 12,500 |
 
-##4. Customer Analysis
-Top 10 Customers
-Who are the highest spending customers?
+**Output Preview**:
+*(No output generated)*
 
-```SQL
+### Query 22: Data Retrieval
+Executes a SQL operation.
 
-SELECT 
-    CUSTOMERNAME, 
-    MONETARY_VALUE
-FROM RFM_VIEW
-ORDER BY MONETARY_VALUE DESC 
-LIMIT 10;
+```sql
+--  THESE ARE THE TWO VIP CUSTOMERS WHO SPENDS MORE THAN USUAL
 ```
--- OUTPUT --
 
-| CUSTOMERNAME | MONETARY_VALUE | | :--- | :--- | | Euro Shopping Channel | 912,294 | | Mini Gifts Distributors Ltd. | 654,851 | | Australian Collectors, Co. | 200,995 | | [...Top 10 List] | ... |
-
-##Geographic Revenue
-Which countries generate the most sales?
-
-```SQL
-
-SELECT 
-    COUNTRY, 
-    SUM(SALES) AS TOTAL_SALES 
-FROM SAMPLE_RFM
-GROUP BY COUNTRY
-ORDER BY TOTAL_SALES DESC
-LIMIT 5;
-```
--- OUTPUT --
-
-| COUNTRY | TOTAL_SALES | | :--- | :--- | | USA | 3,627,982 | | Spain | 1,215,686 | | France | 1,110,916 |
-
-##Average Deal Size
-What is the average Lifetime Value (LTV) per customer?
-
-```SQL
-
-SELECT ROUND(AVG(MONETARY_VALUE)) AS AVG_DEAL_SIZE FROM RFM_VIEW;
-```
--- OUTPUT -- 
-| AVG_DEAL_SIZE | | :--- | | 109,050 |
-
-##5. Order & Operational Analysis
-Order Status Distribution
-How many orders are Shipped vs Cancelled?
-
-```SQL
-
-SELECT 
-    STATUS, 
-    COUNT(ORDERNUMBER) AS TOTAL_ORDERS
-FROM SAMPLE_RFM
-GROUP BY STATUS
-ORDER BY TOTAL_ORDERS DESC;
-```
--- OUTPUT --
-| STATUS | TOTAL_ORDERS | | :--- | :--- | | Shipped | 280 | | Cancelled | 6 | | Pending | 15 |
-
-##Seasonality (Order Volume by Month)
-Identifying the busiest months.
-
-```SQL
-
-SELECT 
-    MONTH_ID, 
-    COUNT(ORDERNUMBER) AS TOTAL_ORDERS
-FROM SAMPLE_RFM
-GROUP BY 1
-ORDER BY TOTAL_ORDERS DESC
-LIMIT 3;
-```
--- OUTPUT --
-| MONTH_ID | TOTAL_ORDERS | INSIGHT | | :--- | :--- | :--- | | 11 | 250 | November (Peak) | | 10 | 170 | October | | 05 | 95 | May |
-
-##VIP Customer Identification
-Using statistical deviation to find customers with unusually high order values (Outliers).
-
-```SQL
-
-SELECT 
-    CUSTOMERNAME, 
-    MONETARY_VALUE AS SALES
-FROM RFM_VIEW
-WHERE MONETARY_VALUE > (
-    SELECT AVG(MONETARY_VALUE) + 2 * STDDEV(MONETARY_VALUE) FROM RFM_VIEW
-)
-ORDER BY SALES DESC;
-```
--- OUTPUT -- 
+**Output Preview**:
+*(No output generated)*
 
 
-PRODUCTLINE,TOTAL_SALES
-Classic Cars,"3,919,616"
-Vintage Cars,"1,797,559"
-Motorcycles,"1,121,426"
-Trucks and Buses,"1,024,113"
+## How to Run
+1. Execute the DDL script to set up the database.
+2. Run the queries in your preferred SQL client.
+
+## Future Improvements
+- Add indexes for performance optimization.
+- Implement stored procedures for complex logic.
